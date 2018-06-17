@@ -7,6 +7,9 @@ import org.apache.spark.ml.classification.LogisticRegressionModel
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.sql.DataFrame
 import scala.collection.mutable.ListBuffer
+import org.apache.spark.ml.tuning.CrossValidator
+import org.apache.spark.ml.tuning.ParamGridBuilder
+import org.apache.spark.ml.tuning.CrossValidatorModel
 
 
 
@@ -55,6 +58,25 @@ object LogResIrisDataSet {
     return model;
   }
   
+  def bestModel(trainSet : DataFrame, cvSet : DataFrame) : CrossValidatorModel={
+    val lr = new LogisticRegression().setLabelCol("label")
+                              .setPredictionCol("predictedLabel")  
+    val evaluator = new MulticlassClassificationEvaluator()
+                  .setLabelCol("label")
+                  .setPredictionCol("predictedLabel")
+                  .setMetricName("accuracy")
+    val paramMaps = new ParamGridBuilder()
+                          .addGrid(lr.regParam, regParams)
+                          .addGrid(lr.maxIter, Array(100,200))
+                          .build()
+    val cv = new CrossValidator().setEstimator(lr)
+                  .setEvaluator(evaluator)
+                  .setEstimatorParamMaps(paramMaps)
+    val set = trainSet.union(cvSet);
+    val model = cv.fit(set)
+    return model;
+  }
+  
   def main(args : Array[String]) {
     val spark = SparkSession.builder().getOrCreate();
      val file = spark.read.text(args(0));
@@ -80,7 +102,7 @@ object LogResIrisDataSet {
      val Array(trainSet, cvSet, testSet)= df.randomSplit(Array(0.6,0.2,0.2));
      trainSet.persist()
      cvSet.persist()
-     val model = createBestModel(trainSet, cvSet)
+     val model = bestModel(trainSet, cvSet)
      
      val evaluator = new MulticlassClassificationEvaluator()
                   .setLabelCol("label")
