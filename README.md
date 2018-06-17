@@ -6,7 +6,9 @@ Nothing could be simpler than the Iris dataset to learn classification technique
 If you are totally new to data science, this is your start line. The data has only 150 rows & 4 columns.
 
 I have used Spark-ML library's Logisitic Regression and have split the data randomly into Training(60%), Cross Validation Set(20%),
-Test Set (20%) and have programmed to get the best possible regularization parameter.
+Test Set (20%) and have programmed to get the best possible regularization parameter when looking for best regularization parameter manually.
+
+I have also added bestModel function which makes use of CrossValidator Class of Spark ML Library and finds out the best regularization parameter and maxIterations. 
 
 Get the Data Set here : https://archive.ics.uci.edu/ml/datasets/Iris
 
