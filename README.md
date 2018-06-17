@@ -9,3 +9,7 @@ I have used Spark-ML library's Logisitic Regression and have split the data rand
 Test Set (20%) and have programmed to get the best possible regularization parameter.
 
 Get the Data Set here : https://archive.ics.uci.edu/ml/datasets/Iris
+
+###### Run the program using the following command
+
+``spark-submit --class com.ankit.IrisDataSet.LogResIrisDataSet IrisDataSet-0.0.1-SNAPSHOT.jar path/to/irisData.txt``
