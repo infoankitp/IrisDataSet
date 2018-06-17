@@ -57,7 +57,7 @@ object LogResIrisDataSet {
   
   def main(args : Array[String]) {
     val spark = SparkSession.builder().getOrCreate();
-     val file = spark.read.text("/home/ankit/Desktop/Datasets/Iris Dataset/iris.txt");
+     val file = spark.read.text(args(0));
      val newNames = Seq("features","label")
      val seqData = file.rdd.map(row=>{
        val line = row.getString(0).split(",");
